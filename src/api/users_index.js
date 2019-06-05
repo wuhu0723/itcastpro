@@ -43,3 +43,10 @@ export const editUser = (obj) => {
       return result.data
     })
 }
+// 实现用户数据的删除
+export const delUserById = (id) => {
+  return axios.delete(`users/${id}`)
+    .then((result) => {
+      return result.data
+    })
+}

@@ -33,10 +33,10 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" content="编辑" placement="top-end">
-            <el-button type="primary" icon="el-icon-edit" @click='showEditDialog(scope.row)'></el-button>
+            <el-button type="primary" icon="el-icon-edit" @click="showEditDialog(scope.row)"></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="删除" placement="top-end">
-            <el-button type="warning" icon="el-icon-delete"></el-button>
+            <el-button type="warning" icon="el-icon-delete" @click="del(scope.row.id)"></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="分配角色" placement="top-end">
             <el-button type="success" icon="el-icon-share"></el-button>
@@ -59,24 +59,20 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="editDialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click='editSubmit'>确 定</el-button>
+        <el-button type="primary" @click="editSubmit">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
-import { getUserList, editUser } from '@/api/users_index.js'
+import { getUserList, editUser, delUserById } from '@/api/users_index.js'
 export default {
   data () {
     return {
       // 编辑操作验证规则
       rules: {
-        email: [
-          { required: true, message: '请输入邮箱', trigger: 'blur' }
-        ],
-        mobile: [
-          { required: true, message: '请输入手机号', trigger: 'blur' }
-        ]
+        email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
+        mobile: [{ required: true, message: '请输入手机号', trigger: 'blur' }]
       },
       // 设置编辑对话框是否显示，默认隐藏
       editDialogFormVisible: false,
@@ -103,25 +99,54 @@ export default {
     }
   },
   methods: {
+    // 根据id删除用户
+    del (id) {
+      this.$confirm(`此操作将永久删除id号为${id}的用户, 是否继续?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        // 如果单击确定就会触发then中的回调
+        .then(() => {
+          // 确认之后再进行删除操作
+          delUserById(id).then(result => {
+            if (result.meta.status === 200) {
+              // 给出提示
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              // 刷新
+              this.init()
+            } else {
+              this.$message({
+                type: 'error',
+                message: '删除失败!'
+              })
+            }
+          })
+        })
+        // 单击取消会触发catch中的回调
+        .catch(() => {})
+    },
     // 实现编辑提交
     editSubmit () {
       // 实现数据的再次验证
       // validate:可以实现指定表单的数据验证
       // 这个方法验证完毕之后，会调用回调函数，这个回调有一个参数valid,它就是是否通过验证的标识
       // 如果通过验证，就返回true,否则返回 False
-      this.$refs.editForm.validate((valid) => {
+      this.$refs.editForm.validate(valid => {
         if (valid) {
           // 实现编辑提交请求
-          editUser(this.editForm)
-            .then((result) => {
-              // 将这一行数据的数据源对象重置，就可以更新这一行数据的展示
-              // 这种有一个好处就是没有必要将当前页的数据重新加载，避免反复的向后台发送请求
-              // this.editTemp = result.data
-              // 这里最终我们为了解决用户修改数据后又单击取消的bug,还是将刷新封装为一个单独的函数
-              this.init()
-              // 隐藏编辑对话框
-              this.editDialogFormVisible = false
-            })
+          editUser(this.editForm).then(result => {
+            // 将这一行数据的数据源对象重置，就可以更新这一行数据的展示
+            // 这种有一个好处就是没有必要将当前页的数据重新加载，避免反复的向后台发送请求
+            // this.editTemp = result.data
+            // 这里最终我们为了解决用户修改数据后又单击取消的bug,还是将刷新封装为一个单独的函数
+            this.init()
+            // 隐藏编辑对话框
+            this.editDialogFormVisible = false
+          })
           // 实现数据刷新
         } else {
           this.$message({
