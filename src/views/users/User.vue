@@ -26,7 +26,7 @@
         <!-- slot-scope：数据插槽，就是将来可以通过这个插槽获取到这一行所展示数据对象
         这个数据对象就可以在模板的任意位置使用-->
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.mg_state" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+          <el-switch v-model="scope.row.mg_state" active-color="#13ce66" inactive-color="#ff4949" @change='changeStatu($event,scope.row.id)'></el-switch>
         </template>
       </el-table-column>
       <!-- 操作列-编辑删除 -->
@@ -65,7 +65,7 @@
   </div>
 </template>
 <script>
-import { getUserList, editUser, delUserById } from '@/api/users_index.js'
+import { getUserList, editUser, delUserById, updateUserStatuById } from '@/api/users_index.js'
 export default {
   data () {
     return {
@@ -99,6 +99,19 @@ export default {
     }
   },
   methods: {
+    // 修改用户状态
+    changeStatu (type, id) {
+      console.log(type, id)
+      updateUserStatuById(id, type)
+        .then((result) => {
+          if (result.meta.status === 200) {
+            this.$message({
+              type: 'success',
+              message: result.meta.msg
+            })
+          }
+        })
+    },
     // 根据id删除用户
     del (id) {
       this.$confirm(`此操作将永久删除id号为${id}的用户, 是否继续?`, '提示', {

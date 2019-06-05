@@ -50,3 +50,10 @@ export const delUserById = (id) => {
       return result.data
     })
 }
+// 实现用户状态除
+export const updateUserStatuById = (id, type) => {
+  return axios.put(`users/${id}/state/${type}`)
+    .then((result) => {
+      return result.data
+    })
+}
