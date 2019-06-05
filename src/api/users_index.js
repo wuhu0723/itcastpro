@@ -29,8 +29,16 @@ export const login = (obj) => {
 }
 
 // 获取用户数据
-export const getUserList = (pa) => {
-  return axios.get('users', { params: pa })
+export const getUserList = (obj) => {
+  return axios.get('users', { params: obj })
+    .then((result) => {
+      return result.data
+    })
+}
+
+// 实现编辑用户提交
+export const editUser = (obj) => {
+  return axios.put(`users/${obj.id}`, obj)
     .then((result) => {
       return result.data
     })

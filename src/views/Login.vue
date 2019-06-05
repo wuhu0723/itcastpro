@@ -18,7 +18,7 @@
 </template>
 <script>
 // 对象的解构
-import { login } from '@/api/index.js'
+import { login } from '@/api/users_index.js'
 export default {
   data () {
     return {
