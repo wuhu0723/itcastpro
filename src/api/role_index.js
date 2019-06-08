@@ -40,3 +40,8 @@ export const addUser = (obj) => {
       return result.data
     })
 }
+
+// 删除指定角色的指定权限
+export const removeRightByUserId = (roleid, rightid) => {
+  return axios.delete(`roles/${roleid}/rights/${rightid}`)
+}

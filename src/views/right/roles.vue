@@ -30,7 +30,7 @@
                       </el-col>
                       <el-col :span="18">
                           <div class="grid-content bg-purple">
-                            <el-tag closable :type="'warning'" v-for="third in second.children" :key='third.id' style='margin-right:5px;margin-bottom:15px'>{{third.authName}}</el-tag>
+                            <el-tag closable :type="'warning'" v-for="third in second.children" :key='third.id' style='margin-right:5px;margin-bottom:15px' @close='removeSingleRight(scope.row,third.id)'>{{third.authName}}</el-tag>
                           </div>
                       </el-col>
                   </el-row>
@@ -64,7 +64,7 @@
 </template>
 <script>
 // import { getAllRightList } from '@/api/right_index.js'
-import { getAllRoleList } from '@/api/role_index.js'
+import { getAllRoleList, removeRightByUserId } from '@/api/role_index.js'
 export default {
   data () {
     return {
@@ -76,6 +76,15 @@ export default {
     this.getRoleList()
   },
   methods: {
+    //   删除角色权限
+    async removeSingleRight (row, rightid) {
+      // 写？--所有操作代码基于接口文档
+      let result = await removeRightByUserId(row.id, rightid)
+      console.log(result)
+      // 刷新:只重置当前角色的对应权限数据---不会造成页面的整体刷新
+      row.children = result.data.data
+    },
+    // 获取所有角色列表--角色的权限在这个返回数据中能够获取到
     async getRoleList () {
       let result = await getAllRoleList()
       this.roleList = result.data
