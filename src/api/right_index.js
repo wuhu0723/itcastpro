@@ -24,3 +24,10 @@ export const getAllRightList = (type) => {
     url: `rights/${type}`
   })
 }
+
+// 获取左侧菜单权限
+export const getLeftMenus = () => {
+  return axios({
+    url: `menus`
+  })
+}

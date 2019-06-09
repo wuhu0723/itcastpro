@@ -13,33 +13,15 @@
           text-color="#fff"
           active-text-color="#ffd04b"
         >
-          <el-submenu index="1">
+          <el-submenu :index="item.id+''" v-for="item in menuList" :key="item.id">
             <template slot="title">
               <i class="el-icon-location"></i>
-              <span>用户管理</span>
+              <span>{{item.authName}}</span>
             </template>
-            <el-menu-item index="/home/user">
+            <el-menu-item :index="'/home/'+subitem.path" v-for='subitem in item.children' :key='subitem.id'>
               <template slot="title">
                 <i class="el-icon-location"></i>
-                <span>用户列表</span>
-              </template>
-            </el-menu-item>
-          </el-submenu>
-          <el-submenu index="2">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>权限管理</span>
-            </template>
-            <el-menu-item index="/home/roles">
-              <template slot="title">
-                <i class="el-icon-location"></i>
-                <span>角色列表</span>
-              </template>
-            </el-menu-item>
-            <el-menu-item index="/home/rights">
-              <template slot="title">
-                <i class="el-icon-location"></i>
-                <span>权限列表</span>
+                <span>{{subitem.authName}}</span>
               </template>
             </el-menu-item>
           </el-submenu>
@@ -62,9 +44,18 @@
   </div>
 </template>
 <script>
+import { getLeftMenus } from '@/api/right_index.js'
 export default {
   data () {
-    return {}
+    return {
+      menuList: []
+    }
+  },
+  mounted () {
+    getLeftMenus().then(result => {
+      console.log(result)
+      this.menuList = result.data.data
+    })
   },
   methods: {
     handleOpen (key, keyPath) {

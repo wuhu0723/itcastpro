@@ -274,6 +274,9 @@ export default {
         .then(() => {
           // 确认之后再进行删除操作
           delUserById(id).then(result => {
+            console.log('------------------------')
+            console.log(result)
+            console.log('---------------------')
             if (result.meta.status === 200) {
               // 给出提示
               this.$message({
