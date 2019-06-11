@@ -7,6 +7,9 @@ import Welcome from '@/views/Welcome.vue'
 import User from '@/views/users/User.vue'
 import Rights from '@/views/right/rights.vue'
 import Roles from '@/views/right/roles.vue'
+import Goods from '@/views/goods/goods.vue'
+import List from '@/views/goods/list.vue'
+import Add from '@/views/goods/add.vue'
 
 Vue.use(VueRouter)
 
@@ -50,6 +53,26 @@ export default new VueRouter({
           name: 'Roles',
           path: 'roles',
           component: Roles
+        },
+        // 商品列表
+        {
+          name: 'Goods',
+          path: 'goods',
+          component: Goods,
+          // 添加重定向
+          redirect: { name: 'List' },
+          children: [
+            {
+              name: 'List',
+              path: 'list',
+              component: List
+            },
+            {
+              name: 'Add',
+              path: 'add',
+              component: Add
+            }
+          ]
         }
       ]
     }

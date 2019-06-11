@@ -32,7 +32,7 @@
             <span class="myicon myicon-menu toggle-btn"></span>
             <span class="system-title">电商后台管理系统</span>
             <div class="welcome">
-                <span>你好：admin </span>
+                <span>你好：{{$store.getters.getUserName}}</span>
                 <a href="javascript:;">退出</a>
             </div>
         </el-header>
@@ -48,12 +48,15 @@ import { getLeftMenus } from '@/api/right_index.js'
 export default {
   data () {
     return {
-      menuList: []
+      menuList: [],
+      usename: ''
     }
   },
   mounted () {
+    // this.usename = this.$store.commit('getUserName')
+
     getLeftMenus().then(result => {
-      console.log(result)
+      // console.log(result)
       this.menuList = result.data.data
     })
   },

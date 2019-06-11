@@ -48,10 +48,16 @@ export default {
           //   发送登陆验证请求
           login(this.LoginForm)
             .then((result) => {
-              // console.log(result)
+              console.log(result)
               if (result.meta.status === 200) {
                 // 将token数据存储到本地存储
                 console.log(result)
+                // 将用户名存储到vuex
+                // this.$store.state.currentUerName = result.data.username
+                // 同步方式的调用
+                // this.$store.commit('setUserName', result.data.username)
+                // 通过dispatch调用Actions中的方法--异步方式
+                this.$store.dispatch('setUserNameAction', result.data.username)
                 localStorage.setItem('itcastpro_token', result.data.token)
                 //   要进行路由的跳转
                 this.$router.push({ name: 'Home' })
